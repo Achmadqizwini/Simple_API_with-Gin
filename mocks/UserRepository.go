@@ -34,6 +34,27 @@ func (_m *UserRepository) Create(input user.Core) (int, error) {
 	return r0, r1
 }
 
+// DeleteUser provides a mock function with given fields: id
+func (_m *UserRepository) DeleteUser(id int) (int, error) {
+	ret := _m.Called(id)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(int) int); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *UserRepository) GetAll() ([]user.Core, error) {
 	ret := _m.Called()
@@ -55,6 +76,41 @@ func (_m *UserRepository) GetAll() ([]user.Core, error) {
 	}
 
 	return r0, r1
+}
+
+// GetById provides a mock function with given fields: id
+func (_m *UserRepository) GetById(id int) (user.Core, error) {
+	ret := _m.Called(id)
+
+	var r0 user.Core
+	if rf, ok := ret.Get(0).(func(int) user.Core); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(user.Core)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateUser provides a mock function with given fields: input, id
+func (_m *UserRepository) UpdateUser(input user.Core, id int) error {
+	ret := _m.Called(input, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(user.Core, int) error); ok {
+		r0 = rf(input, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 type mockConstructorTestingTNewUserRepository interface {
