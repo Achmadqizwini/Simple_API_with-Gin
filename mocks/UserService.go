@@ -27,6 +27,20 @@ func (_m *UserService) Create(input user.Core) error {
 	return r0
 }
 
+// DeleteUser provides a mock function with given fields: id
+func (_m *UserService) DeleteUser(id int) error {
+	ret := _m.Called(id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *UserService) GetAll() ([]user.Core, error) {
 	ret := _m.Called()
@@ -48,6 +62,41 @@ func (_m *UserService) GetAll() ([]user.Core, error) {
 	}
 
 	return r0, r1
+}
+
+// GetById provides a mock function with given fields: id
+func (_m *UserService) GetById(id int) (user.Core, error) {
+	ret := _m.Called(id)
+
+	var r0 user.Core
+	if rf, ok := ret.Get(0).(func(int) user.Core); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(user.Core)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateUser provides a mock function with given fields: input, id
+func (_m *UserService) UpdateUser(input user.Core, id int) error {
+	ret := _m.Called(input, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(user.Core, int) error); ok {
+		r0 = rf(input, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 type mockConstructorTestingTNewUserService interface {
