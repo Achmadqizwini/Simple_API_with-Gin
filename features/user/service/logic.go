@@ -54,7 +54,7 @@ func (service *userService) GetById(id int) (data user.Core, err error) {
 func (service *userService) DeleteUser(id int) (err error) {
 	_, errDel := service.userRepository.DeleteUser(id)
 	if errDel != nil {
-		return errors.New("failed deletw user, error query")
+		return errors.New("failed delete user, error query")
 	}
 	return nil
 }
