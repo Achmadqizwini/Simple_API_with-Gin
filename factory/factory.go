@@ -1,25 +1,17 @@
 package factory
 
 import (
-	userDelivery "be13/ca/features/user/delivery"
-	userRepo "be13/ca/features/user/repository"
-	userService "be13/ca/features/user/service"
-
-	bookDelivery "be13/ca/features/book/delivery"
-	bookRepo "be13/ca/features/book/repository"
-	bookService "be13/ca/features/book/service"
+	mhsDelivery "be13/ca/features/mahasiswa/delivery"
+	mhsRepo "be13/ca/features/mahasiswa/repository"
+	mhsService "be13/ca/features/mahasiswa/service"
+	"database/sql"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
-func InitFactory(e *echo.Echo, db *gorm.DB) {
-	userRepoFactory := userRepo.New(db)
-	userServiceFactory := userService.New(userRepoFactory)
-	userDelivery.New(userServiceFactory, e)
-
-	bookRepoFactory := bookRepo.New(db)
-	bookServiceFactory := bookService.New(bookRepoFactory)
-	bookDelivery.New(bookServiceFactory, e)
+func InitFactory(e *echo.Echo, db *sql.DB) {
+	mhsRepoFactory := mhsRepo.NewRaw(db)
+	mhsServiceFactory := mhsService.New(mhsRepoFactory)
+	mhsDelivery.New(mhsServiceFactory, e)
 
 }
