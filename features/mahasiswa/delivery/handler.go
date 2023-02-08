@@ -6,85 +6,97 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 )
 
 type MahasiswaDelivery struct {
 	mahasiswaService mahasiswa.ServiceInterface
 }
 
-func New(service mahasiswa.ServiceInterface, e *echo.Echo) {
+func New(service mahasiswa.ServiceInterface, e *gin.Engine) {
 	handler := &MahasiswaDelivery{
 		mahasiswaService: service,
 	}
-
 	e.POST("/mahasiswa", handler.Create)
 	e.PUT("/mahasiswa/:id", handler.Update)
 	e.DELETE("/mahasiswa/:id", handler.Delete)
 	e.GET("/mahasiswa/:id", handler.Read)
+	e.GET("/mahasiswa", handler.GetAll)
 }
 
-func (delivery *MahasiswaDelivery) Create(c echo.Context) error {
-	userInput := MahasiswaRequest{}
+func (delivery *MahasiswaDelivery) Create(c *gin.Context) {
+	userInput := mahasiswa.Core{}
 	errBind := c.Bind(&userInput)
 	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse("Error binding data "+errBind.Error()))
+		c.JSON(http.StatusBadRequest, helper.FailedResponse("Error binding data "+errBind.Error()))
 	}
-	dataCore := requestToCore(userInput)
-	err := delivery.mahasiswaService.Create(dataCore)
+
+	err := delivery.mahasiswaService.Create(userInput)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse("failed insert data"+err.Error()))
+		c.JSON(http.StatusInternalServerError, helper.FailedResponse("failed insert data"+err.Error()))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessResponse("success create new users"))
+	c.IndentedJSON(http.StatusOK, helper.SuccessResponse("success create new users"))
 }
 
-func (delivery *MahasiswaDelivery) Update(c echo.Context) error {
+func (delivery *MahasiswaDelivery) Update(c *gin.Context) {
 	id, errConv := strconv.Atoi(c.Param("id"))
 	if errConv != nil {
-		return c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
+		c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
 	}
 
-	userInput := MahasiswaRequest{}
+	userInput := mahasiswa.Core{}
 	errBind := c.Bind(&userInput)
 	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse("Error binding data "+errBind.Error()))
+		c.JSON(http.StatusBadRequest, helper.FailedResponse("Error binding data "+errBind.Error()))
 	}
 
-	dataCore := requestToCore(userInput)
-	errUpt := delivery.mahasiswaService.Update(dataCore, id)
+	errUpt := delivery.mahasiswaService.Update(userInput, id)
 	if errUpt != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse("Error Db update "+errUpt.Error()))
+		c.JSON(http.StatusBadRequest, helper.FailedResponse("Error Db update "+errUpt.Error()))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessResponse("success update data"))
+	c.JSON(http.StatusOK, helper.SuccessResponse("success update data"))
 }
 
-func (delivery *MahasiswaDelivery) Delete(c echo.Context) error {
+func (delivery *MahasiswaDelivery) Delete(c *gin.Context) {
 	id, errConv := strconv.Atoi(c.Param("id"))
 	if errConv != nil {
-		return c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
+		c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
 	}
 
 	errDel := delivery.mahasiswaService.Delete(id)
 	if errDel != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse("error delete user"+errDel.Error()))
+		c.JSON(http.StatusBadRequest, helper.FailedResponse("error delete user"+errDel.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helper.SuccessResponse("success delete data"))
+	c.JSON(http.StatusOK, helper.SuccessResponse("success delete data"))
 
 }
 
-func (delivery *MahasiswaDelivery) Read(c echo.Context) error {
+func (delivery *MahasiswaDelivery) Read(c *gin.Context) {
 	id, errConv := strconv.Atoi(c.Param("id"))
 	if errConv != nil {
-		return c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
+		c.JSON(http.StatusBadRequest, helper.BadRequest(errConv.Error()))
 	}
 
 	results, err := delivery.mahasiswaService.Read(id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
+		c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
 
-	dataResponse := fromCoreList(results)
+	c.JSON(http.StatusOK, helper.SuccessWithDataResponse("Success read all data", results))
+}
 
-	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse("Success read all data", dataResponse))
+func (delivery *MahasiswaDelivery) GetAll(c *gin.Context) {
+	result, err := delivery.mahasiswaService.GetAll()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failed",
+			"message": "error get all mahasiswa",
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "success get all data",
+		"data":    result,
+	})
 }

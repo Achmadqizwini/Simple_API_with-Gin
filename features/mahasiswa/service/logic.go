@@ -15,10 +15,19 @@ func New(repo mahasiswa.RepositoryInterface) mahasiswa.ServiceInterface {
 	}
 }
 
+// GetAll implements mahasiswa.ServiceInterface
+func (srv *mahasiswaService) GetAll() (res []mahasiswa.Core, err error) {
+	result, errGet := srv.mahasiswaRepository.GetAll()
+	if errGet != nil {
+		return result, errGet
+	}
+	return result, nil
+}
+
 // Create implements mahasiswa.ServiceInterface
 func (srv *mahasiswaService) Create(input mahasiswa.Core) (err error) {
-	errCreate := srv.mahasiswaRepository.Create(input)
-	if errCreate != nil {
+
+	if errCreate := srv.mahasiswaRepository.Create(input); errCreate != nil {
 		return errors.New("failed insert data, error query")
 	}
 	return nil
@@ -26,8 +35,8 @@ func (srv *mahasiswaService) Create(input mahasiswa.Core) (err error) {
 
 // DeleteUser implements mahasiswa.ServiceInterface
 func (srv *mahasiswaService) Delete(id int) (err error) {
-	errCreate := srv.mahasiswaRepository.Delete(id)
-	if errCreate != nil {
+
+	if errDel := srv.mahasiswaRepository.Delete(id); errDel != nil {
 		return errors.New("failed insert data, error query")
 	}
 	return nil
@@ -35,8 +44,8 @@ func (srv *mahasiswaService) Delete(id int) (err error) {
 
 // UpdateUser implements mahasiswa.ServiceInterface
 func (srv *mahasiswaService) Update(input mahasiswa.Core, id int) (err error) {
-	errCreate := srv.mahasiswaRepository.Update(input, id)
-	if errCreate != nil {
+
+	if errUpt := srv.mahasiswaRepository.Update(input, id); errUpt != nil {
 		return errors.New("failed insert data, error query")
 	}
 	return nil

@@ -7,10 +7,10 @@ type Core struct {
 }
 
 type NilaiMhs struct {
-	ID          uint
-	Nama        string
-	NamaMatkul  string
-	NilaiRerata uint
+	ID           uint
+	Nama         string
+	Nama_Matkul  string
+	Nilai_Rerata uint
 }
 
 type ServiceInterface interface {
@@ -18,6 +18,7 @@ type ServiceInterface interface {
 	Delete(id int) (err error)
 	Update(input Core, id int) (err error)
 	Read(id int) (data []NilaiMhs, err error)
+	GetAll() (res []Core, err error)
 }
 
 type RepositoryInterface interface {
@@ -25,4 +26,5 @@ type RepositoryInterface interface {
 	Delete(id int) (err error)
 	Update(input Core, id int) (err error)
 	Read(id int) (data []NilaiMhs, err error)
+	GetAll() (res []Core, err error)
 }

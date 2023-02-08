@@ -5,15 +5,17 @@ import (
 	"be13/ca/factory"
 	"fmt"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	db := config.ConnectToDB()
+	defer db.Close()
 
-	e := echo.New()
+	e := gin.New()
+	e.Use(gin.Recovery())
 
 	factory.InitFactory(e, db)
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", 8080)))
+	e.Run(fmt.Sprintf(":%d", 8080))
 
 }

@@ -1,0 +1,22 @@
+GET http://localhost:8080/mahasiswa/1
+
+###
+GET http://localhost:8080/mahasiswa
+
+###
+POST  http://localhost:8080/mahasiswa
+Content-Type: application/json
+
+{
+    "nama": "DIOOO",
+    "alamat": "Bandung"
+}
+###
+
+PUT  http://localhost:8080/mahasiswa/2
+Content-Type: application/json
+
+{
+    "nama": "totoro",
+    "alamat": "jakarta"
+}
